@@ -271,31 +271,27 @@
     document.getElementById('previous-btn').disabled = currentPage === 1;
     document.getElementById('next-btn').disabled = currentPage === totalPages;
 
-    // GitHub API setup
-    const repoOwner = "Jasonxu1225";
-    const repoName = "TacTGen-Feedback";
-    const token = ""; // Replace with a GitHub Personal Access Token
-
+    // Use fetch to send feedback to the backend server
     function submitFeedback() {
-      // Collect all feedback data
       const feedback1 = document.querySelector('input[name="feedback1"]:checked')?.value;
       const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
       const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
 
-      // Create feedback data for GitHub Issue
-      const feedbackData = `Feedback 1: ${feedback1}\nFeedback 2: ${feedback2}\nFeedback 3: ${feedback3}`;
+      const feedbackData = {
+        feedback1: feedback1,
+        feedback2: feedback2,
+        feedback3: feedback3
+      };
 
-      // Create an issue using GitHub API
-      fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, {
+      // Send feedback to GitHub Actions API to trigger the workflow
+      fetch('https://api.github.com/repos/Jasonxu1225/TacTGen-Feedback/.github/workflows/feedback.yml/dispatches', {
         method: 'POST',
         headers: {
-          'Authorization': `token ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: 'Video Feedback Submission',
-          body: feedbackData,
-          labels: ['feedback']
+          ref: 'main',  // Specify the branch (e.g., 'main' or 'master') that will trigger the workflow
+          inputs: feedbackData // Pass the feedback data as inputs to the GitHub Actions workflow
         })
       })
       .then(response => response.json())
