@@ -272,36 +272,32 @@
     document.getElementById('next-btn').disabled = currentPage === totalPages;
 
     // Use fetch to send feedback to the backend server
-    function submitFeedback() {
+    async function submitFeedback() {
       const feedback1 = document.querySelector('input[name="feedback1"]:checked')?.value;
       const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
       const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
 
-      const feedbackData = {
-        feedback1: feedback1,
-        feedback2: feedback2,
-        feedback3: feedback3
-      };
+      if (!(feedback1 && feedback2 && feedback3)) {
+        alert('请先完成所有选择再提交！');
+        return;
+      }
 
-      // Send feedback data to GitHub Actions via workflow_dispatch
-      fetch('https://api.github.com/repos/Jasonxu1225/TacTGen-Feedback/actions/workflows/feedback.yml/dispatches', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ref: 'main',  // Specify the branch (e.g., 'main') that will trigger the workflow
-          inputs: feedbackData // Pass the feedback data to the workflow as inputs
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        alert('Your feedback has been submitted successfully!');
-        console.log('Feedback submitted:', data);
-      })
-      .catch(error => {
-        console.error('Error submitting feedback:', error);
-      });
+      const resp = await fetch(
+        'https://tactgen-proxy.nwpujasonxu.workers.dev',      // ← 改成你的 Worker URL
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }, // 无 Authorization 头
+          body: JSON.stringify({ feedback1, feedback2, feedback3 })
+        }
+      );
+
+      if (resp.ok) {
+        alert('感谢反馈，提交成功！');
+      } else {
+        const txt = await resp.text();
+        console.error('提交失败:', txt);
+        alert('提交失败，请稍后再试。');
+      }
     }
   </script>
 
