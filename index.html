@@ -278,25 +278,25 @@
       const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
 
       if (!(feedback1 && feedback2 && feedback3)) {
-        alert('请先完成所有选择再提交！');
+        alert('Please fill in all the questions before submitted！');
         return;
       }
 
       const resp = await fetch(
-        'https://tactgen-proxy.nwpujasonxu.workers.dev',      // ← 改成你的 Worker URL
+        'https://tactgen-proxy.nwpujasonxu.workers.dev',      //
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' }, // 无 Authorization 头
+          headers: { 'Content-Type': 'application/json' }, //
           body: JSON.stringify({ feedback1, feedback2, feedback3 })
         }
       );
 
       if (resp.ok) {
-        alert('感谢反馈，提交成功！');
+        alert('Thanks for your feedback, successfully submitted！');
       } else {
         const txt = await resp.text();
-        console.error('提交失败:', txt);
-        alert('提交失败，请稍后再试。');
+        console.error('Failed:', txt);
+        alert('Submitted failed, please try again!');
       }
     }
   </script>
