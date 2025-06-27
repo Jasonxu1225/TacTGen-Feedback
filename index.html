@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Feedback</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    html { font-size: 18px; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 30px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      gap: 40px;  /* Space between each comparison section */
+      align-items: center; /* Ensure body content is centered */
+    }
+
+    .comparison-row {
+      display: flex;
+      flex-direction: column; /* Stack the question and videos vertically */
+      align-items: center;
+      gap: 20px;
+      width: 100%;  /* Allow the comparison row to take up the full width */
+    }
+
+    .video-item {
+      display: flex;
+      justify-content: center; /* Center the videos horizontally */
+      gap: 20px;  /* Space between the two videos */
+      width: 70%; /* Allow the videos to take up full width */
+    }
+
+    .video-item video {
+      width: 48%; /* Allow each video to take up 48% of the width */
+      height: auto;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+    }
+
+    /* Feedback column */
+    .feedback-inline {
+      display: flex;
+      flex-direction: column;  /* Stack question, options, and button vertically */
+      align-items: center;     /* Center everything */
+      gap: 10px;
+      width: 600px;
+      flex: none;
+      text-align: center;      /* Center the question and options horizontally */
+      margin-bottom: 30px;     /* Added space between choices and videos */
+    }
+
+    .feedback-inline .feedback-prompt {
+      font-size: 1.5em;
+      font-weight: 500;
+      text-align: center;
+      margin: 0 auto;
+      width: 100%;
+      display: block;
+    }
+
+    /* Options and button in the same line */
+    .feedback-inline .choices {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feedback-inline .choice {
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      width: auto;
+    }
+
+    .feedback-inline .choice input {
+      transform: scale(1.3);
+      margin-right: 6px;
+    }
+
+    /* Submit Button */
+    #submit-btn {
+      padding: 15px 30px;
+      font-size: 1.5em;
+      cursor: pointer;
+      width: auto;
+      text-align: center;
+      background-color: orangered;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      display: none; /* Initially hidden */
+    }
+
+    #submit-btn:hover {
+      background-color: red;
+    }
+
+    /* Navigation buttons */
+    .nav-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .nav-buttons button {
+      padding: 15px 30px;  /* Increase the padding for larger buttons */
+      font-size: 1.5em;     /* Larger font size */
+      cursor: pointer;
+      width: auto;
+      text-align: center;
+      background-color: #4CAF50; /* Green background */
+      color: white;
+      border: none;
+      border-radius: 6px;
+      transition: background-color 0.3s; /* Smooth hover effect */
+    }
+
+    .nav-buttons button:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .nav-buttons button:disabled {
+      background-color: #ccc;  /* Disabled state for the button */
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Comparison Pages -->
+  <div class="comparison-page" id="page1">
+    <div class="comparison-row">
+      <div class="feedback-inline">
+        <div class="feedback-prompt">
+          Which video did you prefer? (Video 1 vs Video 2)
+        </div>
+        <div class="choices">
+          <div class="choice">
+            <input type="radio" name="feedback1" id="video1Choice" value="Video1" />
+            <label for="video1Choice">Video 1 is better</label>
+          </div>
+          <div class="choice">
+            <input type="radio" name="feedback1" id="video2Choice" value="Video2" />
+            <label for="video2Choice">Video 2 is better</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video 1 and Video 2 side by side -->
+      <div class="video-item">
+        <video controls>
+          <source src="videos/1.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <video controls>
+          <source src="videos/2.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-page" id="page2" style="display: none;">
+    <div class="comparison-row">
+      <div class="feedback-inline">
+        <div class="feedback-prompt">
+          Which video did you prefer? (Video 3 vs Video 4)
+        </div>
+        <div class="choices">
+          <div class="choice">
+            <input type="radio" name="feedback2" id="video3Choice" value="Video3" />
+            <label for="video3Choice">Video 3 is better</label>
+          </div>
+          <div class="choice">
+            <input type="radio" name="feedback2" id="video4Choice" value="Video4" />
+            <label for="video4Choice">Video 4 is better</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video 3 and Video 4 side by side -->
+      <div class="video-item">
+        <video controls>
+          <source src="videos/3.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <video controls>
+          <source src="videos/4.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-page" id="page3" style="display: none;">
+    <div class="comparison-row">
+      <div class="feedback-inline">
+        <div class="feedback-prompt">
+          Which video did you prefer? (Video 5 vs Video 6)
+        </div>
+        <div class="choices">
+          <div class="choice">
+            <input type="radio" name="feedback3" id="video5Choice" value="Video5" />
+            <label for="video5Choice">Video 5 is better</label>
+          </div>
+          <div class="choice">
+            <input type="radio" name="feedback3" id="video6Choice" value="Video6" />
+            <label for="video6Choice">Video 6 is better</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video 5 and Video 6 side by side -->
+      <div class="video-item">
+        <video controls>
+          <source src="videos/5.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <video controls>
+          <source src="videos/6.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button id="previous-btn" onclick="changePage(-1)">Previous Page</button>
+    <button id="next-btn" onclick="changePage(1)">Next Page</button>
+  </div>
+
+  <!-- Submit Button (only visible on the last page) -->
+  <button id="submit-btn" onclick="submitFeedback()" style="display:none;">Submit Feedback</button>
+
+  <script>
+    let currentPage = 1;
+    const totalPages = 3;
+
+    function changePage(direction) {
+      // Hide current page
+      document.getElementById(`page${currentPage}`).style.display = 'none';
+
+      // Calculate next page
+      currentPage += direction;
+
+      // Show the next page
+      if (currentPage >= 1 && currentPage <= totalPages) {
+        document.getElementById(`page${currentPage}`).style.display = 'block';
+      }
+
+      // Show the Submit button only on the last page
+      if (currentPage === totalPages) {
+        document.getElementById('submit-btn').style.display = 'block';
+      } else {
+        document.getElementById('submit-btn').style.display = 'none';
+      }
+
+      // Disable buttons if on the first or last page
+      document.getElementById('previous-btn').disabled = currentPage === 1;
+      document.getElementById('next-btn').disabled = currentPage === totalPages;
+    }
+
+    // Initial button state
+    document.getElementById('previous-btn').disabled = currentPage === 1;
+    document.getElementById('next-btn').disabled = currentPage === totalPages;
+
+    // GitHub API setup
+    const repoOwner = "Jasonxu1225";
+    const repoName = "TacTGen-Feedback";
+    const token = ""; // Replace with a GitHub Personal Access Token
+
+    function submitFeedback() {
+      // Collect all feedback data
+      const feedback1 = document.querySelector('input[name="feedback1"]:checked')?.value;
+      const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
+      const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
+
+      // Create feedback data for GitHub Issue
+      const feedbackData = `Feedback 1: ${feedback1}\nFeedback 2: ${feedback2}\nFeedback 3: ${feedback3}`;
+
+      // Create an issue using GitHub API
+      fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: 'Video Feedback Submission',
+          body: feedbackData,
+          labels: ['feedback']
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Your feedback has been submitted successfully!');
+        console.log('Feedback submitted:', data);
+      })
+      .catch(error => {
+        console.error('Error submitting feedback:', error);
+      });
+    }
+  </script>
+
+</body>
+</html>
