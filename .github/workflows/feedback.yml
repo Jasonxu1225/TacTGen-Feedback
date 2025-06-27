@@ -1,11 +1,25 @@
 name: Submit Feedback as GitHub Issue
 
 on:
-  workflow_dispatch:  # Allow manually triggering the workflow
+  workflow_dispatch:
+    inputs:
+      feedback1:
+        description: 'Feedback 1'
+        required: true
+        type: string
+      feedback2:
+        description: 'Feedback 2'
+        required: true
+        type: string
+      feedback3:
+        description: 'Feedback 3'
+        required: true
+        type: string
 
 jobs:
   submit-feedback:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -15,9 +29,5 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d '{"title": "Video Feedback Submission", "body": "Feedback 1: ${feedback1}\nFeedback 2: ${feedback2}\nFeedback 3: ${feedback3}"}' \
-            https://api.github.com/repos/${{ secrets.OWNER }}/${{ secrets.REPO }}/issues
-        env:
-          feedback1: ${{ secrets.FEEDBACK1 }}
-          feedback2: ${{ secrets.FEEDBACK2 }}
-          feedback3: ${{ secrets.FEEDBACK3 }}
+            -d '{"title": "Video Feedback Submission", "body": "Feedback 1: ${{ github.event.inputs.feedback1 }}\nFeedback 2: ${{ github.event.inputs.feedback2 }}\nFeedback 3: ${{ github.event.inputs.feedback3 }}"}' \
+            https://api.github.com/repos/${{ github.repository }}/issues
