@@ -29,11 +29,11 @@ jobs:
           secure: true
           username: ${{ secrets.MAIL_USERNAME }}   # e.g. mybot@gmail.com
           password: ${{ secrets.MAIL_PASSWORD }}   # app-specific password
-          subject: "New TacTGen video feedback"
+          subject: "New TacTGen Feedback Received"
           to:     "820144073@qq.com"
           from:   "TacTGen Bot <${{ secrets.MAIL_USERNAME }}>"
           body: |
-            A visitor has submitted video-comparison feedback:
+            A visitor has submitted the feedback as follows:
 
             • Pair 1 ⇒ ${{ inputs.feedback1 }}
             • Pair 2 ⇒ ${{ inputs.feedback2 }}
