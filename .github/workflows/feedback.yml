@@ -46,7 +46,7 @@ jobs:
           body: |
             A visitor has submitted the feedback as follows:
 
-            Participant: **${{ inputs.name }}**
+            Participant: ${{ inputs.name }}
             Affiliation: ${{ inputs.affiliation }}
             Position:    ${{ inputs.position }}
 
