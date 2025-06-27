@@ -283,15 +283,15 @@
         feedback3: feedback3
       };
 
-      // Send feedback to GitHub Actions API to trigger the workflow
-      fetch('https://api.github.com/repos/Jasonxu1225/TacTGen-Feedback/.github/workflows/feedback.yml/dispatches', {
+      // Send feedback data to GitHub Actions via workflow_dispatch
+      fetch('https://api.github.com/repos/Jasonxu1225/TacTGen-Feedback/actions/workflows/feedback.yml/dispatches', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          ref: 'main',  // Specify the branch (e.g., 'main' or 'master') that will trigger the workflow
-          inputs: feedbackData // Pass the feedback data as inputs to the GitHub Actions workflow
+          ref: 'main',  // Specify the branch (e.g., 'main') that will trigger the workflow
+          inputs: feedbackData // Pass the feedback data to the workflow as inputs
         })
       })
       .then(response => response.json())
