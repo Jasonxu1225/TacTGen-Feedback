@@ -3,6 +3,18 @@ name: Send video-feedback email
 on:
   workflow_dispatch:
     inputs:
+      name:
+        description: Participant name
+        required: true
+        type: string
+      affiliation:
+        description: Affiliation
+        required: true
+        type: string
+      position:
+        description: Job title / position
+        required: true
+        type: string
       feedback1:
         description: Preferred video for pair 1
         required: true
@@ -19,21 +31,24 @@ on:
 jobs:
   email:
     runs-on: ubuntu-latest
-
     steps:
       - name: Send feedback mail
-        uses: dawidd6/action-send-mail@v6   # marketplace action :contentReference[oaicite:0]{index=0}
+        uses: dawidd6/action-send-mail@v6
         with:
-          server_address: smtp.gmail.com    # or smtp.office365.com, etc.
-          server_port: 465                 # 465 = SSL/TLS (use 587 + secure:false for STARTTLS)
+          server_address: smtp.gmail.com
+          server_port: 465
           secure: true
-          username: ${{ secrets.MAIL_USERNAME }}   # e.g. mybot@gmail.com
-          password: ${{ secrets.MAIL_PASSWORD }}   # app-specific password
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
           subject: "New TacTGen Feedback Received"
           to:     "820144073@qq.com"
           from:   "TacTGen Bot <${{ secrets.MAIL_USERNAME }}>"
           body: |
             A visitor has submitted the feedback as follows:
+
+            Participant: **${{ inputs.name }}**
+            Affiliation: ${{ inputs.affiliation }}
+            Position:    ${{ inputs.position }}
 
             • Pair 1 ⇒ ${{ inputs.feedback1 }}
             • Pair 2 ⇒ ${{ inputs.feedback2 }}

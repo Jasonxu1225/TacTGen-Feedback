@@ -3,303 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Video Feedback</title>
+  <title>TacTGen Feedback Collection</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     html { font-size: 18px; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 30px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      gap: 40px;  /* Space between each comparison section */
-      align-items: center; /* Ensure body content is centered */
-    }
-
-    .comparison-row {
-      display: flex;
-      flex-direction: column; /* Stack the question and videos vertically */
-      align-items: center;
-      gap: 20px;
-      width: 100%;  /* Allow the comparison row to take up the full width */
-    }
-
-    .video-item {
-      display: flex;
-      justify-content: center; /* Center the videos horizontally */
-      gap: 20px;  /* Space between the two videos */
-      width: 70%; /* Allow the videos to take up full width */
-    }
-
-    .video-item video {
-      width: 48%; /* Allow each video to take up 48% of the width */
-      height: auto;
-      border: 2px solid #ccc;
-      border-radius: 6px;
-    }
-
-    /* Feedback column */
-    .feedback-inline {
-      display: flex;
-      flex-direction: column;  /* Stack question, options, and button vertically */
-      align-items: center;     /* Center everything */
-      gap: 10px;
-      width: 600px;
-      flex: none;
-      text-align: center;      /* Center the question and options horizontally */
-      margin-bottom: 30px;     /* Added space between choices and videos */
-    }
-
-    .feedback-inline .feedback-prompt {
-      font-size: 1.5em;
-      font-weight: 500;
-      text-align: center;
-      margin: 0 auto;
-      width: 100%;
-      display: block;
-    }
-
-    /* Options and button in the same line */
-    .feedback-inline .choices {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .feedback-inline .choice {
-      font-size: 1.2em;
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-      width: auto;
-    }
-
-    .feedback-inline .choice input {
-      transform: scale(1.3);
-      margin-right: 6px;
-    }
-
-    /* Submit Button */
-    #submit-btn {
-      padding: 15px 30px;
-      font-size: 1.5em;
-      cursor: pointer;
-      width: auto;
-      text-align: center;
-      background-color: orangered;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      margin-top: 20px;
-      display: none; /* Initially hidden */
-    }
-
-    #submit-btn:hover {
-      background-color: red;
-    }
-
-    /* Navigation buttons */
-    .nav-buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .nav-buttons button {
-      padding: 15px 30px;  /* Increase the padding for larger buttons */
-      font-size: 1.5em;     /* Larger font size */
-      cursor: pointer;
-      width: auto;
-      text-align: center;
-      background-color: #4CAF50; /* Green background */
-      color: white;
-      border: none;
-      border-radius: 6px;
-      transition: background-color 0.3s; /* Smooth hover effect */
-    }
-
-    .nav-buttons button:hover {
-      background-color: #45a049; /* Darker green on hover */
-    }
-
-    .nav-buttons button:disabled {
-      background-color: #ccc;  /* Disabled state for the button */
-      cursor: not-allowed;
-    }
+    body { font-family: 'Roboto', sans-serif; margin: 30px; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+    .comparison-row { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+    .video-item { display: flex; justify-content: center; gap: 20px; width: 70%; }
+    .video-item video { width: 48%; height: auto; border: 2px solid #ccc; border-radius: 6px; }
+    .feedback-inline { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 600px; margin-bottom: 30px; }
+    .feedback-inline .feedback-prompt { font-size: 1.5em; font-weight: 500; text-align: center; }
+    .feedback-inline .choices { display: flex; gap: 10px; justify-content: center; }
+    .feedback-inline .choice { font-size: 1.2em; display: flex; align-items: center; }
+    .feedback-inline .choice input { transform: scale(1.3); margin-right: 6px; }
+    #submit-btn { padding: 15px 30px; font-size: 1.5em; background: orangered; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; display: none; }
+    #submit-btn:hover { background: red; }
+    .nav-buttons { display: flex; gap: 10px; margin-top: 20px; }
+    .nav-buttons button { padding: 15px 30px; font-size: 1.5em; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background .3s; }
+    .nav-buttons button:hover { background: #45a049; }
+    .nav-buttons button:disabled { background: #ccc; cursor: not-allowed; }
+    input[type=text] { width: 100%; padding: 10px; font-size: 1.1em; border: 1px solid #ccc; border-radius: 4px; }
   </style>
 </head>
 <body>
 
-  <!-- Comparison Pages -->
+  <!-- page1 – personal info -->
   <div class="comparison-page" id="page1">
     <div class="comparison-row">
       <div class="feedback-inline">
-        <div class="feedback-prompt">
-          Which video did you prefer? (Video 1 vs Video 2)
-        </div>
-        <div class="choices">
-          <div class="choice">
-            <input type="radio" name="feedback1" id="video1Choice" value="Video1" />
-            <label for="video1Choice">Video 1 is better</label>
-          </div>
-          <div class="choice">
-            <input type="radio" name="feedback1" id="video2Choice" value="Video2" />
-            <label for="video2Choice">Video 2 is better</label>
-          </div>
-        </div>
-      </div>
+        <div class="feedback-prompt">Tell us a bit about yourself</div>
 
-      <!-- Video 1 and Video 2 side by side -->
-      <div class="video-item">
-        <video controls>
-          <source src="videos/1.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <video controls>
-          <source src="videos/2.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:400px;">
+          <input id="userName"     type="text" placeholder="Name*">
+          <input id="affiliation"  type="text" placeholder="Affiliation*">
+          <input id="position"     type="text" placeholder="Position*">
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="comparison-page" id="page2" style="display: none;">
+  <!-- page2 – comparison 1 -->
+  <div class="comparison-page" id="page2" style="display:none;">
     <div class="comparison-row">
       <div class="feedback-inline">
-        <div class="feedback-prompt">
-          Which video did you prefer? (Video 3 vs Video 4)
-        </div>
+        <div class="feedback-prompt">Which video did you prefer? (Video 1 vs Video 2)</div>
         <div class="choices">
-          <div class="choice">
-            <input type="radio" name="feedback2" id="video3Choice" value="Video3" />
-            <label for="video3Choice">Video 3 is better</label>
-          </div>
-          <div class="choice">
-            <input type="radio" name="feedback2" id="video4Choice" value="Video4" />
-            <label for="video4Choice">Video 4 is better</label>
-          </div>
+          <label class="choice"><input type="radio" name="feedback1" value="Video1">Video 1 is better</label>
+          <label class="choice"><input type="radio" name="feedback1" value="Video2">Video 2 is better</label>
         </div>
       </div>
-
-      <!-- Video 3 and Video 4 side by side -->
       <div class="video-item">
-        <video controls>
-          <source src="videos/3.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <video controls>
-          <source src="videos/4.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <video controls><source src="videos/1.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/2.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
 
-  <div class="comparison-page" id="page3" style="display: none;">
+  <!-- page3 – comparison 2 -->
+  <div class="comparison-page" id="page3" style="display:none;">
     <div class="comparison-row">
       <div class="feedback-inline">
-        <div class="feedback-prompt">
-          Which video did you prefer? (Video 5 vs Video 6)
-        </div>
+        <div class="feedback-prompt">Which video did you prefer? (Video 3 vs Video 4)</div>
         <div class="choices">
-          <div class="choice">
-            <input type="radio" name="feedback3" id="video5Choice" value="Video5" />
-            <label for="video5Choice">Video 5 is better</label>
-          </div>
-          <div class="choice">
-            <input type="radio" name="feedback3" id="video6Choice" value="Video6" />
-            <label for="video6Choice">Video 6 is better</label>
-          </div>
+          <label class="choice"><input type="radio" name="feedback2" value="Video3">Video 3 is better</label>
+          <label class="choice"><input type="radio" name="feedback2" value="Video4">Video 4 is better</label>
         </div>
       </div>
-
-      <!-- Video 5 and Video 6 side by side -->
       <div class="video-item">
-        <video controls>
-          <source src="videos/5.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <video controls>
-          <source src="videos/6.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <video controls><source src="videos/3.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/4.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
 
-  <!-- Navigation Buttons -->
+  <!-- page4 – comparison 3 -->
+  <div class="comparison-page" id="page4" style="display:none;">
+    <div class="comparison-row">
+      <div class="feedback-inline">
+        <div class="feedback-prompt">Which video did you prefer? (Video 5 vs Video 6)</div>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="feedback3" value="Video5">Video 5 is better</label>
+          <label class="choice"><input type="radio" name="feedback3" value="Video6">Video 6 is better</label>
+        </div>
+      </div>
+      <div class="video-item">
+        <video controls><source src="videos/5.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/6.mp4" type="video/mp4"></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- navigation -->
   <div class="nav-buttons">
     <button id="previous-btn" onclick="changePage(-1)">Previous Page</button>
     <button id="next-btn" onclick="changePage(1)">Next Page</button>
   </div>
 
-  <!-- Submit Button (only visible on the last page) -->
-  <button id="submit-btn" onclick="submitFeedback()" style="display:none;">Submit Feedback</button>
+  <!-- submit -->
+  <button id="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
 
-  <script>
-    let currentPage = 1;
-    const totalPages = 3;
+<script>
+  let currentPage = 1;
+  const totalPages = 4;
 
-    function changePage(direction) {
-      // Hide current page
-      document.getElementById(`page${currentPage}`).style.display = 'none';
+  function changePage(direction) {
+    document.getElementById(`page${currentPage}`).style.display = 'none';
+    currentPage += direction;
+    document.getElementById(`page${currentPage}`).style.display = 'block';
 
-      // Calculate next page
-      currentPage += direction;
-
-      // Show the next page
-      if (currentPage >= 1 && currentPage <= totalPages) {
-        document.getElementById(`page${currentPage}`).style.display = 'block';
-      }
-
-      // Show the Submit button only on the last page
-      if (currentPage === totalPages) {
-        document.getElementById('submit-btn').style.display = 'block';
-      } else {
-        document.getElementById('submit-btn').style.display = 'none';
-      }
-
-      // Disable buttons if on the first or last page
-      document.getElementById('previous-btn').disabled = currentPage === 1;
-      document.getElementById('next-btn').disabled = currentPage === totalPages;
-    }
-
-    // Initial button state
+    document.getElementById('submit-btn').style.display = currentPage === totalPages ? 'block' : 'none';
     document.getElementById('previous-btn').disabled = currentPage === 1;
-    document.getElementById('next-btn').disabled = currentPage === totalPages;
+    document.getElementById('next-btn').disabled     = currentPage === totalPages;
+  }
+  // 初始按钮
+  document.getElementById('previous-btn').disabled = true;
 
-    // Use fetch to send feedback to the backend server
-    async function submitFeedback() {
-      const feedback1 = document.querySelector('input[name="feedback1"]:checked')?.value;
-      const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
-      const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
-
-      if (!(feedback1 && feedback2 && feedback3)) {
-        alert('Please fill in all the questions before submitted！');
-        return;
-      }
-
-      const resp = await fetch(
-        'https://tactgen-proxy.nwpujasonxu.workers.dev',      //
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }, //
-          body: JSON.stringify({ feedback1, feedback2, feedback3 })
-        }
-      );
-
-      if (resp.ok) {
-        alert('Thanks for your feedback, successfully submitted！');
-      } else {
-        const txt = await resp.text();
-        console.error('Failed:', txt);
-        alert('Submitted failed, please try again!');
-      }
+  async function submitFeedback() {
+    // 个人信息
+    const name        = document.getElementById('userName').value.trim();
+    const affiliation = document.getElementById('affiliation').value.trim();
+    const position    = document.getElementById('position').value.trim();
+    if (!(name && affiliation && position)) {
+      alert('Please complete name, affiliation and position.');
+      currentPage = 1; changePage(0);
+      return;
     }
-  </script>
 
+    // 三个选择
+    const feedback1 = document.querySelector('input[name="feedback1"]:checked')?.value;
+    const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
+    const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
+    if (!(feedback1 && feedback2 && feedback3)) {
+      alert('Please finish all comparisons before submitting!');
+      return;
+    }
+
+    const payload = { name, affiliation, position, feedback1, feedback2, feedback3 };
+
+    const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (resp.ok) {
+      alert('Thanks! Your feedback has been submitted.');
+    } else {
+      console.error('Submit failed:', await resp.text());
+      alert('Submit failed, please try again.');
+    }
+  }
+</script>
 </body>
 </html>
