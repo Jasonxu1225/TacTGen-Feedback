@@ -11,32 +11,32 @@
     html { font-size: 18px; }
     body {
       font-family: 'Roboto', sans-serif;
-      margin: 15px 30px 30px;
+      margin: 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 40px;
     }
 
     /* ---------- LAYOUT BLOCKS ---------- */
-    .comparison-row { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
-    .video-item     { display: flex; justify-content: center; width: 60%; }
-    .video-item video { width: 100%; border: 2px solid #ccc; border-radius: 6px; }
+    .comparison-row { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+    .video-item     { display: flex; justify-content: center; gap: 20px; width: 70%; }
+    .video-item video { width: 48%; border: 2px solid #ccc; border-radius: 6px; }
 
     /* ---------- FORM + PROMPT ---------- */
-    .feedback-inline { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 600px; margin-bottom: 5px; }
+    .feedback-inline { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 600px; margin-bottom: 30px; }
     .feedback-inline .feedback-prompt { font-size: 1.5em; font-weight: 500; text-align: center; }
-    .feedback-inline .choices { display: flex; gap: 20px; justify-content: center; }
+    .feedback-inline .choices { display: flex; gap: 10px; justify-content: center; }
     .feedback-inline .choice { font-size: 1.2em; display: flex; align-items: center; }
     .feedback-inline .choice input { transform: scale(1.3); margin-right: 6px; }
 
     /* ---------- NAV + SUBMIT BUTTONS ---------- */
-    .nav-buttons { display: flex; gap: 10px; margin-top: -5px; }
-    .nav-buttons button { padding: 6px 15px; font-size: 1.1em; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background .3s; }
+    .nav-buttons { display: flex; gap: 10px; margin-top: 20px; }
+    .nav-buttons button { padding: 15px 30px; font-size: 1.5em; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background .3s; }
     .nav-buttons button:hover { background: #45a049; }
     .nav-buttons button:disabled { background: #ccc; cursor: not-allowed; }
 
-    #submit-btn { padding: 5px 30px; font-size: 1.5em; background: orangered; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: -5px; display: none; }
+    #submit-btn { padding: 15px 30px; font-size: 1.5em; background: orangered; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; display: none; }
     #submit-btn:hover { background: red; }
 
     /* ---------- TEXT INPUTS ---------- */
@@ -51,11 +51,11 @@
   <div class="comparison-page" id="page1">
     <div class="comparison-row">
       <div class="feedback-inline">
-        <div class="feedback-prompt" style="margin-bottom:20px;margin-top:20px;font-size:38px;">
-          Tell us a bit about yourself<span class="asterisk"> *</span>
-        </div>
+      <div class="feedback-prompt" style="margin-bottom: 50px; margin-top: 50px; font-size: 38px;">
+        Tell us a bit about yourself<span class="asterisk"> *</span>
+      </div>
 
-        <div style="display:flex;flex-direction:column;gap:15px;width:100%;max-width:400px;margin-bottom:10px">
+        <div style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:400px;">
           <input id="userName" type="text" placeholder="Name">
           <input id="affiliation" type="text" placeholder="Affiliation">
           <input id="position" type="text" placeholder="Position">
@@ -64,85 +64,96 @@
     </div>
   </div>
 
-  <!-- ========== PAGE 2 – VIDEO 1 ========== -->
+  <!-- ========== PAGE 2 – COMPARISON 1 ========== -->
   <div class="comparison-page" id="page2" style="display:none;">
     <div class="comparison-row">
       <div class="feedback-inline">
         <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
+          Which video did you prefer?<span class="asterisk"> *</span> (Video 1 vs Video 2)
         </div>
         <div class="choices">
-          <label class="choice"><input type="radio" name="feedback1" value="Generated">Generated</label>
-          <label class="choice"><input type="radio" name="feedback1" value="Realistic">Realistic</label>
+          <label class="choice"><input type="radio" name="feedback1" value="Video1">Video 1 is better</label>
+          <label class="choice"><input type="radio" name="feedback1" value="Video2">Video 2 is better</label>
         </div>
       </div>
       <div class="video-item">
-        <video controls><source src="videos/Pass_986528_1843954_52/Epoch100_GFalse_SBJ_L1.04549_traj.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/1.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/2.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
 
-  <!-- ========== PAGE 3 – VIDEO 2 ========== -->
+  <!-- ========== PAGE 3 – COMPARISON 2 ========== -->
   <div class="comparison-page" id="page3" style="display:none;">
     <div class="comparison-row">
       <div class="feedback-inline">
         <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
+          Which video did you prefer?<span class="asterisk"> *</span> (Video 3 vs Video 4)
         </div>
         <div class="choices">
-          <label class="choice"><input type="radio" name="feedback2" value="Generated">Generated</label>
-          <label class="choice"><input type="radio" name="feedback2" value="Realistic">Realistic</label>
+          <label class="choice"><input type="radio" name="feedback2" value="Video3">Video 3 is better</label>
+          <label class="choice"><input type="radio" name="feedback2" value="Video4">Video 4 is better</label>
         </div>
       </div>
       <div class="video-item">
-        <video controls><source src="videos/Pass_986528_1852334_64/Epoch100_GFalse_SBJ_L2.325035_traj.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/3.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/4.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
 
-  <!-- ========== PAGE 4 – VIDEO 3 ========== -->
+  <!-- ========== PAGE 4 – COMPARISON 3 ========== -->
   <div class="comparison-page" id="page4" style="display:none;">
     <div class="comparison-row">
       <div class="feedback-inline">
         <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
+          Which video did you prefer?<span class="asterisk"> *</span> (Video 5 vs Video 6)
         </div>
         <div class="choices">
-          <label class="choice"><input type="radio" name="feedback3" value="Generated">Generated</label>
-          <label class="choice"><input type="radio" name="feedback3" value="Realistic">Realistic</label>
+          <label class="choice"><input type="radio" name="feedback3" value="Video5">Video 5 is better</label>
+          <label class="choice"><input type="radio" name="feedback3" value="Video6">Video 6 is better</label>
         </div>
       </div>
       <div class="video-item">
-        <video controls><source src="videos/Pass_986531_1929915_51/GroundTruth.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/5.mp4" type="video/mp4"></video>
+        <video controls><source src="videos/6.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
 
-  <!-- ---------- NAVIGATION ---------- -->
+  <!-- NAVIGATION BUTTONS -->
   <div class="nav-buttons">
-    <button id="previous-btn" onclick="changePage(-1)">Last Page</button>
+    <button id="previous-btn" onclick="changePage(-1)">Previous Page</button>
     <button id="next-btn"     onclick="changePage(1)">Next Page</button>
   </div>
 
-  <!-- ---------- SUBMIT ---------- -->
+  <!-- SUBMIT BUTTON -->
   <button id="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
 
 <!-- ====================== CLIENT-SIDE SCRIPT ====================== -->
 <script>
   let currentPage = 1;          // first page shown
-  const totalPages = 4;         // total pages (personal + 3 videos)
+  const totalPages = 4;         // total number of pages
 
+  /**
+   * Change page by +1 / –1.
+   * Also handles button states & submit-button visibility.
+   */
   function changePage(direction) {
     document.getElementById(`page${currentPage}`).style.display = 'none';
     currentPage += direction;
     document.getElementById(`page${currentPage}`).style.display = 'block';
 
+    // Show submit only on last page
     document.getElementById('submit-btn').style.display = currentPage === totalPages ? 'block' : 'none';
     document.getElementById('previous-btn').disabled  = currentPage === 1;
     document.getElementById('next-btn').disabled      = currentPage === totalPages;
   }
-  document.getElementById('previous-btn').disabled = true;
+  document.getElementById('previous-btn').disabled = true; // disable "Previous" on first load
 
+  /**
+   * Gather form data, validate, POST to Cloudflare Worker.
+   */
   async function submitFeedback() {
     // ----- personal info -----
     const name        = document.getElementById('userName').value.trim();
@@ -150,7 +161,8 @@
     const position    = document.getElementById('position').value.trim();
     if (!(name && affiliation && position)) {
       alert('Please complete Name, Affiliation and Position (all required).');
-      currentPage = 1; changePage(0); return;
+      currentPage = 1; changePage(0);
+      return;
     }
 
     // ----- three mandatory choices -----
@@ -158,7 +170,8 @@
     const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
     const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
     if (!(feedback1 && feedback2 && feedback3)) {
-      alert('Please answer all three questions (marked with *).'); return;
+      alert('Please answer all three comparison questions (marked with *).');
+      return;
     }
 
     const payload = { name, affiliation, position, feedback1, feedback2, feedback3 };
