@@ -90,6 +90,12 @@
   <div class="nav-buttons">
     <button id="previous-btn" onclick="changePage(-1)">Last Page</button>
     <button id="next-btn"     onclick="changePage(1)">Next Page</button>
+
+    <input id="page-number-input" type="number" style="width:80px" placeholder="Page #">
+    <button id="go-to-page-btn" onclick="goToPage()">Go</button>
+
+    <!-- live display -->
+    <span id="page-display" style="font-size:1.1em;font-weight:500;margin-left:8px;margin-top:5px;"></span>
   </div>
 
   <!-- ---------- SUBMIT ---------- -->
@@ -182,20 +188,41 @@ videos.forEach((v, idx) => {
   container.appendChild(page);
 });
 
-/* ----------------- 5. NAVIGATION -------------------- */
+/* ------- 5. NAVIGATION ------- */
 let currentPage = 1;
-const totalPages = videos.length + 2;   // +1 info +1 description
+const totalPages = videos.length + 2;   // 1-info, 2-description, rest = clips
 
-function changePage(step){
+const pageBox      = document.getElementById('page-number-input');
+const pageDisplay  = document.getElementById('page-display');
+const submitButton = document.getElementById('submit-btn');
+
+pageBox.max   = totalPages;
+pageBox.value = currentPage;
+pageDisplay.textContent = `Current Page: ${currentPage} / ${totalPages}`;
+
+function showPage(n){
+  if(n < 1 || n > totalPages) return;
+
   document.getElementById(`page${currentPage}`).style.display = 'none';
-  currentPage += step;
+  currentPage = n;
   document.getElementById(`page${currentPage}`).style.display = 'block';
 
-  document.getElementById('submit-btn').style.display = currentPage === totalPages ? 'block' : 'none';
+  /* show submit from page 3 onward */
+  submitButton.style.display = currentPage >= 3 ? 'block' : 'none';
+
   document.getElementById('previous-btn').disabled = currentPage === 1;
   document.getElementById('next-btn').disabled     = currentPage === totalPages;
+
+  pageBox.value = currentPage;
+  pageDisplay.textContent = `Current Page: ${currentPage} / ${totalPages}`;
 }
 document.getElementById('previous-btn').disabled = true;
+function changePage(step){ showPage(currentPage + step); }
+function goToPage(){
+  const n = parseInt(pageBox.value, 10);
+  if(Number.isInteger(n) && n >= 1 && n <= totalPages){ showPage(n); }
+  else{ alert(`Enter a number between 1 and ${totalPages}.`); pageBox.value = currentPage; }
+}
 
 /* ---------------- 6. SUBMISSION --------------------- */
 async function submitFeedback(){
@@ -204,18 +231,21 @@ async function submitFeedback(){
   const position    = document.getElementById('position').value.trim();
   if(!(name && affiliation && position)){
     alert('Please complete Name, Affiliation and Position (all required).');
-    currentPage = 1; changePage(0); return;
+    showPage(1);
+    return;
   }
 
+  /* collect whatever answers exist */
   const answers = {};
-  let complete  = true;
+  let answeredCount = 0;
   videos.forEach((v, idx) => {
-    const val = document.querySelector(`input[name="q${idx}"]:checked`)?.value;
-    if(!val) complete = false;
-    answers[v.id] = val || null;
+    const val = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
+    if(val) answeredCount++;
+    answers[v.id] = val;
   });
-  if(!complete){
-    alert('Please answer every question (marked with *).');
+
+  if(answeredCount === 0){
+    alert('Please answer at least one video before submitting.');
     return;
   }
 
@@ -223,10 +253,19 @@ async function submitFeedback(){
 
   try{
     const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev',{
-      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
     });
+
     if(resp.ok){
-      alert('Thanks! Your feedback has been successfully submitted.');
+      /* ---------- changed block ---------- */
+      if(answeredCount === videos.length){
+        alert('Thanks! All your feedback has been successfully submitted.');
+      }else{
+        alert(`Thanks! Your completed feedback has been successfully submitted.\nPlease remember to come back to complete the remaining videos, starting from Page ${currentPage+1}.`);
+      }
+      /* ----------------------------------- */
     }else{
       console.error('Server error:', await resp.text());
       alert('Submission failed, please try again.');
@@ -236,6 +275,7 @@ async function submitFeedback(){
     alert('Network error, please try again.');
   }
 }
+
 </script>
 </body>
 </html>
