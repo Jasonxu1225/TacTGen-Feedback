@@ -17,31 +17,26 @@
       align-items: center;
       gap: 20px;
     }
+    .comparison-row { display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; }
+    .video-item     { display:flex; justify-content:center; width:60%; }
+    .video-item video { width:100%; border:2px solid #ccc; border-radius:6px; }
 
-    /* ---------- LAYOUT BLOCKS ---------- */
-    .comparison-row { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
-    .video-item     { display: flex; justify-content: center; width: 60%; }
-    .video-item video { width: 100%; border: 2px solid #ccc; border-radius: 6px; }
+    .feedback-inline { display:flex; flex-direction:column; align-items:center; gap:10px; width:600px; margin-bottom:5px; }
+    .feedback-inline .feedback-prompt { font-size:1.5em; font-weight:500; text-align:center; }
+    .feedback-inline .choices { display:flex; gap:20px; justify-content:center; }
+    .feedback-inline .choice  { font-size:1.2em; display:flex; align-items:center; }
+    .feedback-inline .choice input { transform:scale(1.3); margin-right:6px; }
 
-    /* ---------- FORM + PROMPT ---------- */
-    .feedback-inline { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 600px; margin-bottom: 5px; }
-    .feedback-inline .feedback-prompt { font-size: 1.5em; font-weight: 500; text-align: center; }
-    .feedback-inline .choices { display: flex; gap: 20px; justify-content: center; }
-    .feedback-inline .choice { font-size: 1.2em; display: flex; align-items: center; }
-    .feedback-inline .choice input { transform: scale(1.3); margin-right: 6px; }
+    .nav-buttons { display:flex; gap:10px; margin-top:-5px; }
+    .nav-buttons button { padding:6px 15px; font-size:1.1em; background:#4caf50; color:#fff; border:none; border-radius:6px; cursor:pointer; transition:background .3s; }
+    .nav-buttons button:hover    { background:#45a049; }
+    .nav-buttons button:disabled { background:#ccc; cursor:not-allowed; }
 
-    /* ---------- NAV + SUBMIT BUTTONS ---------- */
-    .nav-buttons { display: flex; gap: 10px; margin-top: -5px; }
-    .nav-buttons button { padding: 6px 15px; font-size: 1.1em; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background .3s; }
-    .nav-buttons button:hover { background: #45a049; }
-    .nav-buttons button:disabled { background: #ccc; cursor: not-allowed; }
+    #submit-btn { padding:5px 30px; font-size:1.5em; background:orangered; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-top:-5px; display:none; }
+    #submit-btn:hover { background:red; }
 
-    #submit-btn { padding: 5px 30px; font-size: 1.5em; background: orangered; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: -5px; display: none; }
-    #submit-btn:hover { background: red; }
-
-    /* ---------- TEXT INPUTS ---------- */
-    input[type=text] { width: 100%; padding: 10px; font-size: 1.1em; border: 1px solid #ccc; border-radius: 4px; }
-    .asterisk { color: red; margin-left: 2px; }
+    input[type=text] { width:100%; padding:10px; font-size:1.1em; border:1px solid #ccc; border-radius:4px; }
+    .asterisk { color:red; margin-left:2px; }
   </style>
 </head>
 
@@ -54,69 +49,17 @@
         <div class="feedback-prompt" style="margin-bottom:20px;margin-top:20px;font-size:38px;">
           Tell us a bit about yourself<span class="asterisk"> *</span>
         </div>
-
         <div style="display:flex;flex-direction:column;gap:15px;width:100%;max-width:400px;margin-bottom:10px">
-          <input id="userName" type="text" placeholder="Name">
-          <input id="affiliation" type="text" placeholder="Affiliation">
-          <input id="position" type="text" placeholder="Position">
+          <input id="userName"     type="text" placeholder="Name">
+          <input id="affiliation"  type="text" placeholder="Affiliation">
+          <input id="position"     type="text" placeholder="Position">
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ========== PAGE 2 – VIDEO 1 ========== -->
-  <div class="comparison-page" id="page2" style="display:none;">
-    <div class="comparison-row">
-      <div class="feedback-inline">
-        <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
-        </div>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="feedback1" value="Generated">Generated</label>
-          <label class="choice"><input type="radio" name="feedback1" value="Realistic">Realistic</label>
-        </div>
-      </div>
-      <div class="video-item">
-        <video controls><source src="videos/Pass_986528_1843954_52/Epoch100_GFalse_SBJ_L1.04549_traj.mp4" type="video/mp4"></video>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== PAGE 3 – VIDEO 2 ========== -->
-  <div class="comparison-page" id="page3" style="display:none;">
-    <div class="comparison-row">
-      <div class="feedback-inline">
-        <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
-        </div>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="feedback2" value="Generated">Generated</label>
-          <label class="choice"><input type="radio" name="feedback2" value="Realistic">Realistic</label>
-        </div>
-      </div>
-      <div class="video-item">
-        <video controls><source src="videos/Pass_986528_1852334_64/Epoch100_GFalse_SBJ_L2.325035_traj.mp4" type="video/mp4"></video>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== PAGE 4 – VIDEO 3 ========== -->
-  <div class="comparison-page" id="page4" style="display:none;">
-    <div class="comparison-row">
-      <div class="feedback-inline">
-        <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
-        </div>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="feedback3" value="Generated">Generated</label>
-          <label class="choice"><input type="radio" name="feedback3" value="Realistic">Realistic</label>
-        </div>
-      </div>
-      <div class="video-item">
-        <video controls><source src="videos/Pass_986531_1929915_51/GroundTruth.mp4" type="video/mp4"></video>
-      </div>
-    </div>
-  </div>
+  <!-- ========== VIDEO PAGES INJECTED HERE ========== -->
+  <div id="videoPagesContainer"></div>
 
   <!-- ---------- NAVIGATION ---------- -->
   <div class="nav-buttons">
@@ -129,58 +72,214 @@
 
 <!-- ====================== CLIENT-SIDE SCRIPT ====================== -->
 <script>
-  let currentPage = 1;          // first page shown
-  const totalPages = 4;         // total pages (personal + 3 videos)
+/* ---------------- 1. LIST ALL FOLDERS ---------------- */
+const gtDirs = [
+  // "Ball touch_2128518_105064_43",
+  // "Ball touch_2128618_56906_50",
+  // "Ball touch_986533_1214727_43",
+  // "Ball touch_986566_1308841_51",
+  // "Blocked Pass_2123892_107_33",
+  // "Blocked Pass_2128378_74563_40",
+  // "Challenge_986530_1986523_38",
+  // "Challenge_986562_1876764_36",
+  // "Clearance_1059731_105771_64",
+  // "Clearance_2128438_98876_46",
+  // "Clearance_986530_2031431_38",
+  // "Clearance_986546_1765116_41",
+  // "Clearance_986553_1676393_54",
+  // "Clearance_986559_1859953_40",
+  // "Clearance_986565_1325975_43",
+  // "Interception_1059712_6858_34",
+  // "Interception_1059731_115956_42",
+  // "Interception_2123892_55321_46",
+  // "Interception_986531_1883957_32",
+  // "Interception_986555_1780773_64",
+  // "Pass_986528_1806899_53",
+  // "Pass_986528_1811929_35",
+  // "Pass_986528_1842887_39",
+  // "Pass_986528_1843954_52",
+  // "Pass_986528_1852334_64",
+  // "Pass_986528_1859894_40",
+  // "Pass_986528_1865367_39",
+  // "Pass_986528_1904604_47",
+  // "Pass_986528_1943866_37",
+  // "Pass_986528_1956069_44",
+  // "Pass_986529_1774140_54",
+  // "Pass_986530_2008718_46",
+  // "Pass_986531_1884385_47",
+  // "Pass_986531_1991526_46",
+  // "Pass_986531_2032929_50",
+  // "Pass_986533_1234959_43",
+  // "Pass_986533_1246052_48",
+  // "Pass_986534_1405258_64",
+  // "Pass_986540_1781405_61",
+  // "Pass_986540_1816450_63",
+  // "Pass_986542_1170572_64",
+  // "Pass_986545_1521950_48",
+  // "Pass_986555_1882608_44",
+  // "Pass - Corner_2123907_123253_42",
+  // "Pass - Corner_986531_2001561_32",
+  // "Save_1059843_13576_46",
+  // "Save_2128342_107143_48",
+  // "Save_2128358_99031_56",
+  "Take On_1059794_42061_41",
+  "Take On_986544_1763801_36"
+];
+const genDirs = [
+  "Ball touch_2128347_12916_49",
+  "Ball touch_986532_1350508_40",
+  // "Ball touch_986561_1892414_37",
+  // "Clearance_1059731_105771_64",
+  // "Clearance_1059731_135796_51",
+  // "Clearance_986528_1837442_38",
+  // "Clearance_986528_1934334_50",
+  // "Clearance_986530_1981338_40",
+  // "Clearance_986546_1820988_41",
+  // "Interception_1059712_6858_34",
+  // "Interception_1059787_48778_55",
+  // "Interception_986540_1814223_33",
+  // "Interception_986563_1765180_38",
+  // "Pass_2123907_115794_55",
+  // "Pass_2128318_45728_60",
+  // "Pass_986528_1843954_52",
+  // "Pass_986528_1865367_39",
+  // "Pass_986528_1904604_47",
+  // "Pass_986528_1928541_40",
+  // "Pass_986528_1949879_55",
+  // "Pass_986529_1830605_39",
+  // "Pass_986530_1984196_40",
+  // "Pass_986530_2008718_46",
+  // "Pass_986531_1929915_51",
+  // "Pass_986531_1962081_42",
+  // "Pass_986531_1975016_42",
+  // "Pass_986531_1991526_46",
+  // "Pass_986531_2003089_47",
+  // "Pass_986531_2027946_40",
+  // "Pass_986531_2032929_50",
+  // "Pass_986532_1412009_55",
+  // "Pass_986533_1234959_43",
+  // "Pass_986534_1323443_48",
+  // "Pass_986534_1407413_45",
+  // "Pass_986536_1670747_46",
+  // "Pass_986538_1769077_51",
+  // "Pass_986540_1781405_61",
+  // "Pass_986540_1816450_63",
+  // "Pass_986542_1170572_64",
+  // "Pass_986546_1806631_55",
+  // "Pass_986550_1830835_64",
+  // "Pass_986555_1882608_44",
+  // "Pass - Corner_1059774_97188_33",
+  // "Pass - Corner_986530_1898288_33",
+  // "Save_2128358_99031_56",
+  // "Save_2128614_101374_45",
+  // "Save_986530_2001841_41",
+  // "Save_986564_1341368_41",
+  // "Take On_1059794_42061_41",
+  // "Take On_986544_1763801_36"
+];
 
-  function changePage(direction) {
-    document.getElementById(`page${currentPage}`).style.display = 'none';
-    currentPage += direction;
-    document.getElementById(`page${currentPage}`).style.display = 'block';
 
-    document.getElementById('submit-btn').style.display = currentPage === totalPages ? 'block' : 'none';
-    document.getElementById('previous-btn').disabled  = currentPage === 1;
-    document.getElementById('next-btn').disabled      = currentPage === totalPages;
+/* ---------------- 2. BUILD VIDEO OBJECTS ------------- */
+const videos = [];
+gtDirs .forEach(dir => videos.push({
+  src : `videos/gt/${dir}/GroundTruth.mp4`,
+  id  : `gt_${dir}`                           // <= will be key in payload
+}));
+genDirs.forEach(dir => videos.push({
+  src : `videos/generated/${dir}/generated.mp4`,
+  id  : `gen_${dir}`
+}));
+
+/* ------------- 3. SHUFFLE DISPLAY ORDER ------------- */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+shuffle(videos);          // order is now random but fixed for this session
+
+/* -------- 4. CREATE ONE “PAGE” PER VIDEO ------------ */
+const container = document.getElementById('videoPagesContainer');
+videos.forEach((v, idx) => {
+  const page = document.createElement('div');
+  page.className = 'comparison-page';
+  page.id        = `page${idx+2}`;    // +2 because page1 is personal info
+  page.style.display = 'none';
+
+  page.innerHTML = `
+    <div class="comparison-row">
+      <div class="feedback-inline">
+        <div class="feedback-prompt">
+          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
+        </div>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="q${idx}" value="Generated">Generated
+          </label>
+          <label class="choice">
+            <input type="radio" name="q${idx}" value="Realistic">Realistic
+          </label>
+        </div>
+      </div>
+      <div class="video-item">
+        <video controls><source src="${v.src}" type="video/mp4"></video>
+      </div>
+    </div>`;
+  container.appendChild(page);
+});
+
+/* ----------------- 5. NAVIGATION -------------------- */
+let currentPage = 1;
+const totalPages = videos.length + 1;
+
+function changePage(step){
+  document.getElementById(`page${currentPage}`).style.display = 'none';
+  currentPage += step;
+  document.getElementById(`page${currentPage}`).style.display = 'block';
+
+  document.getElementById('submit-btn').style.display = currentPage === totalPages ? 'block' : 'none';
+  document.getElementById('previous-btn').disabled = currentPage === 1;
+  document.getElementById('next-btn').disabled     = currentPage === totalPages;
+}
+document.getElementById('previous-btn').disabled = true;
+
+/* ---------------- 6. SUBMISSION --------------------- */
+async function submitFeedback(){
+  /* personal info */
+  const name        = document.getElementById('userName').value.trim();
+  const affiliation = document.getElementById('affiliation').value.trim();
+  const position    = document.getElementById('position').value.trim();
+  if(!(name && affiliation && position)){
+    alert('Please complete Name, Affiliation and Position (all required).');
+    currentPage = 1; changePage(0); return;
   }
-  document.getElementById('previous-btn').disabled = true;
 
-  async function submitFeedback() {
-    // ----- personal info -----
-    const name        = document.getElementById('userName').value.trim();
-    const affiliation = document.getElementById('affiliation').value.trim();
-    const position    = document.getElementById('position').value.trim();
-    if (!(name && affiliation && position)) {
-      alert('Please complete Name, Affiliation and Position (all required).');
-      currentPage = 1; changePage(0); return;
+  /* answers */
+  const answers = {};
+  let complete  = true;
+  videos.forEach((v, idx) => {
+    const val = document.querySelector(`input[name="q${idx}"]:checked`)?.value;
+    if(!val) complete = false;
+    answers[v.id] = val || null;     // <-- id + answer pair
+  });
+  if(!complete){ alert('Please answer every question (marked with *).'); return; }
+
+  /* payload */
+  const payload = { name, affiliation, position, responses: answers };
+
+  try{
+    const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev',{
+      method : 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body   : JSON.stringify(payload)
+    });
+    if(resp.ok){
+      alert('Thanks! Your feedback has been successfully submitted.');
+    }else{
+      console.error('Server error:', await resp.text());
+      alert('Submission failed, please try again.');
     }
-
-    // ----- three mandatory choices -----
-    const feedback1 = document.querySelector('input[name="feedback1"]:checked')?.value;
-    const feedback2 = document.querySelector('input[name="feedback2"]:checked')?.value;
-    const feedback3 = document.querySelector('input[name="feedback3"]:checked')?.value;
-    if (!(feedback1 && feedback2 && feedback3)) {
-      alert('Please answer all three questions (marked with *).'); return;
-    }
-
-    const payload = { name, affiliation, position, feedback1, feedback2, feedback3 };
-
-    try {
-      const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (resp.ok) {
-        alert('Thanks! Your feedback has been successfully submitted.');
-      } else {
-        console.error('Server error:', await resp.text());
-        alert('Submission failed, please try again.');
-      }
-    } catch (err) {
-      console.error('Network error:', err);
-      alert('Network error, please try again.');
-    }
+  }catch(err){
+    console.error('Network error:', err);
+    alert('Network error, please try again.');
   }
+}
 </script>
 </body>
 </html>
