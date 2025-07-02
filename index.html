@@ -53,6 +53,8 @@
           <input id="userName"     type="text" placeholder="Name">
           <input id="affiliation"  type="text" placeholder="Affiliation">
           <input id="position"     type="text" placeholder="Position">
+          <input id="expertise"     type="text" placeholder="Experience or expertise in football">
+          <input id="comments"     type="text" placeholder="Other comments">
         </div>
       </div>
     </div>
@@ -80,6 +82,7 @@
 
       <h3 style="margin-bottom:0.3em;">Your task</h3>
       <p>For each video, decide whether the <strong>post-event player movements</strong> look <em>realistic</em> (authentic) or <em>generated</em> (AI-predicted). Keep in mind that the <strong>ball trajectory is always realistic</strong>.</p>
+      <br><em>PS: You can submit your responses after completing at least one video, and turn back next time to continue. For instance, if you finish and submit feedback for the first 10 videos, you can later return directly to page 11 and continue from there.</em>
     </div>
   </div>
 
@@ -229,8 +232,10 @@ async function submitFeedback(){
   const name        = document.getElementById('userName').value.trim();
   const affiliation = document.getElementById('affiliation').value.trim();
   const position    = document.getElementById('position').value.trim();
-  if(!(name && affiliation && position)){
-    alert('Please complete Name, Affiliation and Position (all required).');
+  const expertise    = document.getElementById('expertise').value.trim();
+  const comments    = document.getElementById('comments').value.trim();
+  if(!(name && affiliation && position && expertise)){
+    alert('Please complete Name, Affiliation,Position, and Expertise (all required).');
     showPage(1);
     return;
   }
@@ -249,7 +254,7 @@ async function submitFeedback(){
     return;
   }
 
-  const payload = { name, affiliation, position, responses: JSON.stringify(answers) };
+  const payload = { name, affiliation, position, expertise, comments, responses: JSON.stringify(answers) };
 
   try{
     const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev',{
