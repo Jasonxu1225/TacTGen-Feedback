@@ -22,7 +22,7 @@ jobs:
             printf 'A visitor has submitted the feedback as follows:\n\n'
             printf 'Participant: %s\n'  "${{ inputs.name }}"
             printf 'Affiliation: %s\n'  "${{ inputs.affiliation }}"
-            printf 'Position:    %s\n\n' "${{ inputs.position }}"
+            printf 'Position: %s\n\n' "${{ inputs.position }}"
 
             echo '${{ inputs.responses }}' \
               | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value)"'
