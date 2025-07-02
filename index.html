@@ -21,7 +21,7 @@
     .video-item     { display:flex; justify-content:center; width:60%; }
     .video-item video { width:100%; border:2px solid #ccc; border-radius:6px; }
 
-    .feedback-inline { display:flex; flex-direction:column; align-items:center; gap:10px; width:600px; margin-bottom:5px; }
+    .feedback-inline { display:flex; flex-direction:column; align-items:center; gap:10px; width:1000px; margin-bottom:5px; }
     .feedback-inline .feedback-prompt { font-size:1.5em; font-weight:500; text-align:center; }
     .feedback-inline .choices { display:flex; gap:20px; justify-content:center; }
     .feedback-inline .choice  { font-size:1.2em; display:flex; align-items:center; }
@@ -153,7 +153,7 @@ videos.forEach((v, idx) => {
     <div class="comparison-row">
       <div class="feedback-inline">
         <div class="feedback-prompt">
-          Is this trajectory generated or realistic?<span class="asterisk"> *</span>
+          Is the post-event player movements generated or realistic?<span class="asterisk"> *</span>
         </div>
         <div class="choices">
           <label class="choice"><input type="radio" name="q${idx}" value="Generated">Generated</label>
