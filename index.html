@@ -74,15 +74,14 @@
       <h3 style="margin-bottom:0.3em;">Additional notes</h3>
       <ul style="padding-left:1.2em;">
         <li>The attacking team always moves <strong>left&nbsp;→&nbsp;right</strong>.</li>
-        <li><strong>Sampling rate:</strong> player tracking is captured at 10 Hz, and videos are rendered at 5 fps, so <em>1s of video equals 0.5s of real-world play</em>.</li>
-        <li>The <strong>ball trajectory is always real</strong>, only the post-event segment of <em>22 players</em> may be synthetic.</li>
+        <li><strong>Sampling rate:</strong> player tracking is captured at 10 Hz, and videos are rendered at 5 fps, so <em>1 s of video equals 0.5 s of real-world play</em>.</li>
+        <li>The <strong>ball trajectory is always real</strong>; only the post-event segment of <em>22 players</em> may be synthetic.</li>
       </ul>
 
       <h3 style="margin-bottom:0.3em;">Your task</h3>
       <p>For each video, decide whether the <strong>post-event player movements</strong> look <em>realistic</em> (authentic) or <em>generated</em> (AI-predicted). Keep in mind that the <strong>ball trajectory is always realistic</strong>.</p>
     </div>
   </div>
-
 
   <!-- ========== VIDEO PAGES INJECTED HERE ========== -->
   <div id="videoPagesContainer"></div>
@@ -138,9 +137,25 @@ const videos = [];
 gtDirs.forEach(dir => videos.push({src:`videos/gt/${dir}/GroundTruth.mp4`,    id:`gt_${dir}`}));
 genDirs.forEach(dir=> videos.push({src:`videos/generated/${dir}/generated.mp4`,id:`gen_${dir}`}));
 
-/* ------------- 3. SHUFFLE DISPLAY ORDER ------------- */
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
-shuffle(videos);    // order is now random
+/* ------------- 3. SEEDED SHUFFLE --------------------- */
+/* deterministic PRNG (mulberry32) */
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const rng = mulberry32(666);   // ← fixed seed
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(rng() * (i + 1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+}
+shuffle(videos);    // same order every load with this seed
 
 /* -------- 4. CREATE ONE “PAGE” PER VIDEO ------------ */
 const container = document.getElementById('videoPagesContainer');
