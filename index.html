@@ -261,7 +261,12 @@ async function submitFeedback(){
   if(!complete){ alert('Please answer every question (marked with *).'); return; }
 
   /* payload */
-  const payload = { name, affiliation, position, responses: answers };
+  const payload = {
+    name,
+    affiliation,
+    position,
+    responses: JSON.stringify(answers)   // 👈 stringify here
+  };
 
   try{
     const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev',{

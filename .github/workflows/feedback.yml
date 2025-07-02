@@ -3,59 +3,38 @@ name: Send video-feedback email
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: Participant name
-        required: true
-        type: string
-      affiliation:
-        description: Affiliation
-        required: true
-        type: string
-      position:
-        description: Job title / position
-        required: true
-        type: string
-      responses:
-        description: |
-          JSON object mapping each video ID to its answer,
-          e.g. {"gt_Ball touch_986533_1214727_43":"Realistic",
-                "gen_Pass_986530_1984196_40":"Generated"}
-        required: true
-        type: string
+      name:        {description: Participant name,         required: true, type: string}
+      affiliation: {description: Affiliation,              required: true, type: string}
+      position:    {description: Job title / position,     required: true, type: string}
+      responses:   {description: 'JSON map videoID→answer',required: true, type: string}
 
 jobs:
   email:
     runs-on: ubuntu-latest
     steps:
-      # 1. Make sure jq is available (usually pre-installed, but install just in case)
       - name: Install jq
         run: sudo apt-get -y update && sudo apt-get -y install jq
 
-      # 2. Build the mail body and expose it via an output
       - name: Format mail body
         id: fmt
         run: |
-          # write header
           {
             printf 'A visitor has submitted the feedback as follows:\n\n'
             printf 'Participant: %s\n'  "${{ inputs.name }}"
             printf 'Affiliation: %s\n'  "${{ inputs.affiliation }}"
-            printf 'Position:    %s\n\n'"${{ inputs.position }}"
+            printf 'Position:    %s\n\n' "${{ inputs.position }}"
 
-            # pretty-print each response • videoID ⇒ answer
             echo '${{ inputs.responses }}' \
-            | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value)"'
+              | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value)"'
 
             printf '\n(Workflow run → https://github.com/%s/actions/runs/%s)\n' \
                    "${{ github.repository }}" "${{ github.run_id }}"
           } >mail.txt
 
-          # pass through as a step output
-          echo 'body<<EOF'   >> $GITHUB_OUTPUT
-          cat  mail.txt      >> $GITHUB_OUTPUT
-          echo 'EOF'         >> $GITHUB_OUTPUT
+          echo 'body<<EOF'   >>"$GITHUB_OUTPUT"
+          cat  mail.txt      >>"$GITHUB_OUTPUT"
+          echo 'EOF'         >>"$GITHUB_OUTPUT"
 
-      # 3. Send the e-mail
       - name: Send feedback mail
         uses: dawidd6/action-send-mail@v6
         with:
@@ -64,7 +43,7 @@ jobs:
           secure: true
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "New TacTGen Feedback Received"
-          to:     "820144073@qq.com"
-          from:   "TacTGen Bot <${{ secrets.MAIL_USERNAME }}>"
-          body: ${{ steps.fmt.outputs.body }}
+          subject:  "New TacTGen Feedback Received"
+          to:       "820144073@qq.com"
+          from:     "TacTGen Bot <${{ secrets.MAIL_USERNAME }}>"
+          body:     ${{ steps.fmt.outputs.body }}
