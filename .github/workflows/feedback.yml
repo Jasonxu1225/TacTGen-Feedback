@@ -3,12 +3,14 @@ name: Send video-feedback email
 on:
   workflow_dispatch:
     inputs:
-      name:        {description: Participant name,         required: true,  type: string}
-      affiliation: {description: Affiliation,              required: true,  type: string}
-      position:    {description: Job title / position,     required: true,  type: string}
-      expertise:   {description: Experience / expertise in football, required: true,  type: string}
-      comments:    {description: Other comments (optional),             required: false, type: string}
-      responses:   {description: 'JSON map videoID→answer',required: true,  type: string}
+      name:        {description: Participant name,                        required: true,  type: string}
+      affiliation: {description: Affiliation,                             required: true,  type: string}
+      position:    {description: Job title / position,                    required: true,  type: string}
+      expertise:   {description: Experience / expertise in football,      required: true,  type: string}
+      comments:    {description: Other comments (optional),               required: false, type: string}
+      rationale:   {description: How the participant distinguished clips, required: true,  type: string}
+      confidence:  {description: Confidence (0-100 %),                    required: true,  type: string}
+      responses:   {description: 'JSON map videoID→answer',               required: true,  type: string}
 
 jobs:
   email:
@@ -24,9 +26,11 @@ jobs:
             printf 'A visitor has submitted the feedback as follows:\n\n'
             printf 'Participant: %s\n'  "${{ inputs.name }}"
             printf 'Affiliation: %s\n'  "${{ inputs.affiliation }}"
-            printf 'Position: %s\n' "${{ inputs.position }}"
-            printf 'Expertise: %s\n' "${{ inputs.expertise }}"
-            printf 'Comments: %s\n\n' "${{ inputs.comments }}"
+            printf 'Position: %s\n'     "${{ inputs.position }}"
+            printf 'Expertise: %s\n'    "${{ inputs.expertise }}"
+            printf 'Comments: %s\n'     "${{ inputs.comments }}"
+            printf 'Rationale: %s\n'    "${{ inputs.rationale }}"
+            printf 'Confidence: %s%%\n\n' "${{ inputs.confidence }}"
 
             echo '${{ inputs.responses }}' \
               | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value)"'
