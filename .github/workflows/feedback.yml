@@ -10,7 +10,7 @@ on:
       comments:    {description: Other comments (optional),               required: false, type: string}
       rationale:   {description: How the participant distinguished clips, required: true,  type: string}
       responses:   {description: 'JSON map videoID→answer',               required: true,  type: string}
-      confidence:  {description: 'JSON map videoID→confidence',           required: true,  type: string}  # Updated for multiple videos
+      confidence:  {description: 'JSON map videoID→confidence',           required: false, type: string}  # Make confidence optional
 
 jobs:
   email:

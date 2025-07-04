@@ -306,18 +306,19 @@ async function submitFeedback() {
 
   // Collect answers and confidence
   const responses = {};
+  const confidenceData = {};  // To store confidence separately if needed
   let answeredCount = 0;
 
   videos.forEach((v, idx) => {
     const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
-    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
+    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || "Not Provided"; // Default to "Not Provided" if not filled
 
     console.log(`Video ${idx}: Answer: ${ans}, Confidence: ${conf}`);  // Log to check
 
     if (ans) {
       responses[v.id] = {
         answer: ans,
-        confidence: conf || "Not Provided" // Ensure confidence is optional and defaults to "Not Provided"
+        confidence: conf // Confidence is either provided or defaulted to "Not Provided"
       };
       answeredCount++;
     }
