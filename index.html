@@ -190,7 +190,7 @@ const genDirs = [
 
 // Function to extract event name from file name
 function extractEventName(fileName) {
-  return fileName.split('_')[0]; // Take the part before the first underscore
+  return fileName.split('_')[0]; // Extracts the event name before the first underscore
 }
 
 // Create video objects and inject them into the HTML
@@ -298,54 +298,49 @@ async function submitFeedback(){
   const expertise  = document.getElementById('expertise').value.trim();
   const comments   = document.getElementById('comments').value.trim();
 
-  if(!(name && affiliation && position && expertise)){
+  if (!(name && affiliation && position && expertise)) {
     alert('Please complete Name, Affiliation, Position, and Expertise (all required).');
     showPage(1);
     return;
   }
 
-  /* 1️⃣ collect answers + confidence */
+  // Collect answers and confidence
   const responses = {};
   let answeredCount = 0;
   videos.forEach((v, idx) => {
-    const ans  = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
+    const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
     const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
-    if(ans) answeredCount++;
-    responses[v.id] = { answer: ans, confidence: conf };
+    if (ans) {
+      responses[v.id] = { answer: ans, confidence: conf }; // Collect answer and confidence
+      answeredCount++;
+    }
   });
 
-  if(answeredCount === 0){
+  if (answeredCount === 0) {
     alert('Please answer at least one video before submitting.');
     return;
   }
 
-  /* 2️⃣ rationale dialog (confidence removed) */
-  const rationale = await askRationale();
-  if(rationale === null) return;          // user cancelled dialog
+  // Prepare and send the payload
+  const payload = {
+    name, affiliation, position, expertise, comments,
+    responses: JSON.stringify(responses),
+  };
 
-  /* 3️⃣ package & send */
-  const payload = { name, affiliation, position, expertise, comments,
-                    rationale,
-                    responses: JSON.stringify(responses) };
-
-  try{
-    const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
+  // Send the payload to the server
+  try {
+    const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
 
-    if(resp.ok){
-      if(answeredCount === videos.length){
-        alert('Thanks! All your feedback has been successfully submitted.');
-      }else{
-        alert(`Thanks! Your completed feedback has been submitted.\nPlease come back later to finish the remaining videos, starting from Page ${currentPage+1}.`);
-      }
-    }else{
-      console.error('Server error:', await resp.text());
+    if (resp.ok) {
+      alert('Thanks! Your feedback has been successfully submitted.');
+    } else {
       alert('Submission failed, please try again.');
     }
-  }catch(err){
+  } catch (err) {
     console.error('Network error:', err);
     alert('Network error, please try again.');
   }
