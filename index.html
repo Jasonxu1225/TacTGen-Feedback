@@ -311,7 +311,10 @@ async function submitFeedback(){
     const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
     const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
     if (ans) {
-      responses[v.id] = { answer: ans, confidence: conf }; // Collect answer and confidence
+      responses[v.id] = {
+        answer: ans,
+        confidence: conf || "Not Provided" // Ensure a default value for confidence if not provided
+      }; // Collect answer and confidence
       answeredCount++;
     }
   });
@@ -324,6 +327,7 @@ async function submitFeedback(){
   // Prepare and send the payload
   const payload = {
     name, affiliation, position, expertise, comments,
+    rationale, // Include rationale as well
     responses: JSON.stringify(responses),
   };
 
