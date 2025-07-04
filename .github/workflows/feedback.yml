@@ -34,7 +34,7 @@ jobs:
 
             # Format responses, confidence, and comments
             echo '${{ inputs.responses }}' \
-              | jq -r 'to_entries[] | "• \(.key) ⇒ Answer: \(.value.answer) - Confidence: \(.value.confidence // "null") - Comments: \(.value.comments // "null")"'  # Ensure confidence and comments are optional
+              | jq -r 'to_entries[] | "• \(.key) ⇒ Answer: \(.value.answer) - Confidence: \(.value.confidence // "null") - Comments: \(.value.comment // "null")"'  # Ensure confidence and comments are optional
 
             printf '\n(Workflow run → https://github.com/%s/actions/runs/%s)\n' \
                    "${{ github.repository }}" "${{ github.run_id }}"

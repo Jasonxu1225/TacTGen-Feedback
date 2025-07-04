@@ -309,26 +309,28 @@ async function submitFeedback() {
     return;
   }
 
-  // Collect answers and confidence
-  const responses = {};
-  let answeredCount = 0;
+    // Collect answers, confidence, and comments
+    const responses = {};
+    let answeredCount = 0;
 
-  // Iterate over all videos and collect answers and confidence
-  videos.forEach((v, idx) => {
-    const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
-    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
-    const comment = document.querySelector(`textarea[name="comments${idx}"]`)?.value.trim() || null;
+    // Iterate over all videos and collect answers, confidence, and comments
+    videos.forEach((v, idx) => {
+      const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
+      const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
+      const comment = document.querySelector(`textarea[name="comments${idx}"]`)?.value.trim() || null;
 
-    responses[v.id] = {
-      answer: ans || null,
-      confidence: conf || null,
-      comment: comment || null   // Store the comment, or null if not provided
-    };
+      // Ensure that if comment is not provided, it is treated as null
+      responses[v.id] = {
+        answer: ans || null,        // Store answer or null if not provided
+        confidence: conf || null,   // Store confidence or null if not provided
+        comment: comment || null    // Store comment or null if not provided
+      };
 
-    if (ans !== null) {
-      answeredCount++;
-    }
-  });
+      // Count answered questions (this is optional for tracking progress)
+      if (ans !== null) {
+        answeredCount++;
+      }
+    });
 
   // Ensure at least one answer
   if (answeredCount === 0) {
