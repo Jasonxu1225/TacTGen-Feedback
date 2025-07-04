@@ -11,6 +11,7 @@ on:
       rationale:   {description: How the participant distinguished clips, required: true,  type: string}
       responses:   {description: 'JSON map videoID→answer',               required: true,  type: string}
       confidence:  {description: 'JSON map videoID→confidence',           required: false, type: string}  # Make confidence optional
+      video_comments: {description: 'JSON map videoID→comments',          required: false, type: string} # Optional comments for each video
 
 jobs:
   email:
@@ -31,9 +32,9 @@ jobs:
             printf 'Comments: %s\n'     "${{ inputs.comments }}"
             printf 'Rationale: %s\n'    "${{ inputs.rationale }}"
 
-            # Format responses and confidence
+            # Format responses, confidence, and comments
             echo '${{ inputs.responses }}' \
-              | jq -r 'to_entries[] | "• \(.key) ⇒ Answer: \(.value.answer) - Confidence: \(.value.confidence // "null")"'  # Ensure confidence is optional
+              | jq -r 'to_entries[] | "• \(.key) ⇒ Answer: \(.value.answer) - Confidence: \(.value.confidence // "null") - Comments: \(.value.comments // "null")"'  # Ensure confidence and comments are optional
 
             printf '\n(Workflow run → https://github.com/%s/actions/runs/%s)\n' \
                    "${{ github.repository }}" "${{ github.run_id }}"

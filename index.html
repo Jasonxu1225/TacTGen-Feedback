@@ -79,7 +79,7 @@
           <input id="userName"     type="text" placeholder="Name*">
           <input id="affiliation"  type="text" placeholder="Affiliation*">
           <input id="position"     type="text" placeholder="Position*">
-          <input id="expertise"     type="text" placeholder="Experience or expertise in football*">
+          <input id="expertise"    type="text" placeholder="Experience or expertise in football*">
           <input id="comments"     type="text" placeholder="Other comments">
         </div>
       </div>
@@ -237,21 +237,26 @@ videos.forEach((v, idx) => {
 
           <!-- Confidence input placed inline with radio options -->
           <span class="confidence-box">
-            Confidence (0–100):
-            <input type="number" name="conf${idx}" min="0" max="100">
+            Confidence:
+            <input type="number" name="conf${idx}" min="0" max="100" placeholder="0-100">
           </span>
         </div>
 
-        <!-- Event name display -->
-        <div class="event-name">
-          Event: ${v.eventName}
+        <!-- Comments input box, optional -->
+        <div class="feedback-inline">
+<!--          <div class="feedback-prompt" style="font-size:1.1em;">-->
+<!--            Additional Comments (optional)-->
+<!--          </div>-->
+          <textarea name="comments${idx}" rows="3" placeholder="Your comments here (optional)" style="width:100%;"></textarea>
         </div>
+
+        <div class="event-name">Event: ${v.eventName}</div>
       </div>
       <div class="video-item">
         <video controls><source src="${v.src}" type="video/mp4"></video>
       </div>
     </div>`;
-  container.appendChild(page);
+  document.getElementById('videoPagesContainer').appendChild(page);
 });
 
 /* ------- 5. NAVIGATION ------- */
@@ -311,43 +316,37 @@ async function submitFeedback() {
   // Iterate over all videos and collect answers and confidence
   videos.forEach((v, idx) => {
     const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
-    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null; // If no confidence provided, use null
+    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
+    const comment = document.querySelector(`textarea[name="comments${idx}"]`)?.value.trim() || null;
 
-    // If the answer is not provided, set answer and confidence to null
     responses[v.id] = {
-      answer: ans || null,       // Set answer to null if not provided
-      confidence: conf || null   // Set confidence to null if not provided
+      answer: ans || null,
+      confidence: conf || null,
+      comment: comment || null   // Store the comment, or null if not provided
     };
 
-    // Count answered questions (this is optional for tracking progress)
     if (ans !== null) {
       answeredCount++;
     }
   });
 
-  // Ensure that at least one question is answered before submitting
+  // Ensure at least one answer
   if (answeredCount === 0) {
     alert('Please answer at least one video before submitting.');
     return;
   }
 
-  // Open the rationale dialog and wait for the user to provide input
   const rationale = await askRationale();
   if (!rationale) {
     alert('Please provide your rationale for distinguishing between generated and realistic clips.');
     return;
   }
 
-  // Prepare the payload
   const payload = {
     name, affiliation, position, expertise, comments, rationale,
-    responses: JSON.stringify(responses), // Serialize the responses to send to the server
+    responses: JSON.stringify(responses),
   };
 
-  // Log the payload to verify its structure
-  console.log('Payload being sent:', JSON.stringify(payload));
-
-  // Send the payload to the server
   try {
     const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev', {
       method: 'POST',
@@ -355,17 +354,17 @@ async function submitFeedback() {
       body: JSON.stringify(payload),
     });
 
-  if (resp.ok) {
-    if (answeredCount === videos.length) {
-      alert('Thanks! All your feedback has been successfully submitted.');
+    if (resp.ok) {
+      if (answeredCount === videos.length) {
+        alert('Thanks! All your feedback has been successfully submitted.');
+      } else {
+        alert(`Thanks! Your feedback up to now has been submitted.\nPlease come back later to finish the remaining videos, starting from Page ${currentPage + 1}.`);
+      }
     } else {
-      alert(`Thanks! Your feedback up to now has been submitted.\nPlease come back later to finish the remaining videos, starting from Page ${currentPage + 1}.`);
+      const errorDetails = await resp.text();
+      console.error('Server error:', errorDetails);
+      alert(`Submission failed, please try again.`);
     }
-  } else {
-    const errorDetails = await resp.text();
-    console.error('Server error:', errorDetails);
-    alert(`Submission failed, please try again.`);
-  }
   } catch (err) {
     console.error('Network error:', err);
     alert('Network error, please try again.');
