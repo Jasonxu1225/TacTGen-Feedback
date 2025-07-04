@@ -33,7 +33,7 @@ jobs:
 
             # Format responses and confidence
             echo '${{ inputs.responses }}' \
-              | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value.answer) - Confidence: \(.value.confidence)%"'  # Correctly shows both answer and confidence
+              | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value.answer) - Confidence: \(.value.confidence // "Not Provided")%"'  # Ensure confidence is optional
 
             printf '\n(Workflow run → https://github.com/%s/actions/runs/%s)\n' \
                    "${{ github.repository }}" "${{ github.run_id }}"

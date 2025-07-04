@@ -291,12 +291,12 @@ function goToPage(){
 }
 
 /* ---------------- 6. SUBMISSION --------------------- */
-async function submitFeedback(){
-  const name       = document.getElementById('userName').value.trim();
-  const affiliation= document.getElementById('affiliation').value.trim();
-  const position   = document.getElementById('position').value.trim();
-  const expertise  = document.getElementById('expertise').value.trim();
-  const comments   = document.getElementById('comments').value.trim();
+async function submitFeedback() {
+  const name = document.getElementById('userName').value.trim();
+  const affiliation = document.getElementById('affiliation').value.trim();
+  const position = document.getElementById('position').value.trim();
+  const expertise = document.getElementById('expertise').value.trim();
+  const comments = document.getElementById('comments').value.trim();
 
   if (!(name && affiliation && position && expertise)) {
     alert('Please complete Name, Affiliation, Position, and Expertise (all required).');
@@ -307,14 +307,18 @@ async function submitFeedback(){
   // Collect answers and confidence
   const responses = {};
   let answeredCount = 0;
+
   videos.forEach((v, idx) => {
     const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
     const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
+
+    console.log(`Video ${idx}: Answer: ${ans}, Confidence: ${conf}`);  // Log to check
+
     if (ans) {
       responses[v.id] = {
         answer: ans,
-        confidence: conf || "Not Provided" // Ensure a default value for confidence if not provided
-      }; // Collect answer and confidence
+        confidence: conf || "Not Provided" // Ensure confidence is optional and defaults to "Not Provided"
+      };
       answeredCount++;
     }
   });
@@ -324,12 +328,21 @@ async function submitFeedback(){
     return;
   }
 
+  // Open the rationale dialog and wait for the user to provide input
+  const rationale = await askRationale();
+  if (!rationale) {
+    alert('Please provide your rationale for distinguishing between generated and realistic clips.');
+    return;
+  }
+
   // Prepare and send the payload
   const payload = {
-    name, affiliation, position, expertise, comments,
-    rationale, // Include rationale as well
-    responses: JSON.stringify(responses),
+    name, affiliation, position, expertise, comments, rationale,
+    responses: JSON.stringify(responses), // Ensure responses is properly serialized
   };
+
+  // Log the payload to verify structure
+  console.log('Payload being sent:', JSON.stringify(payload));
 
   // Send the payload to the server
   try {
@@ -342,7 +355,9 @@ async function submitFeedback(){
     if (resp.ok) {
       alert('Thanks! Your feedback has been successfully submitted.');
     } else {
-      alert('Submission failed, please try again.');
+      const errorDetails = await resp.text();
+      console.error('Server Error:', errorDetails);
+      alert(`Submission failed: ${errorDetails}`);
     }
   } catch (err) {
     console.error('Network error:', err);
@@ -351,20 +366,24 @@ async function submitFeedback(){
 }
 
 /* ---------- Modal helpers (confidence removed) ---------- */
-function openDialog(){ document.getElementById('rationaleDialog').style.display='flex'; }
-function closeDialog(ok){
-  if(!ok){
-    document.getElementById('rationaleDialog').style.display='none';
-    pendingResolve(null);                 // cancel
+function openDialog() {
+  document.getElementById('rationaleDialog').style.display = 'flex';
+}
+
+function closeDialog(ok) {
+  if (!ok) {
+    document.getElementById('rationaleDialog').style.display = 'none';
+    pendingResolve(null); // cancel
     return;
   }
   const rationale = document.getElementById('rationaleText').value.trim();
-  document.getElementById('rationaleDialog').style.display='none';
+  document.getElementById('rationaleDialog').style.display = 'none';
   pendingResolve(rationale);
 }
+
 let pendingResolve;
-function askRationale(){
-  return new Promise(res=>{
+function askRationale() {
+  return new Promise((res) => {
     pendingResolve = res;
     openDialog();
   });
