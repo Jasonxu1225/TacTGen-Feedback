@@ -355,13 +355,17 @@ async function submitFeedback() {
       body: JSON.stringify(payload),
     });
 
-    if (resp.ok) {
-      alert('Thanks! Your feedback has been successfully submitted.');
+  if (resp.ok) {
+    if (answeredCount === videos.length) {
+      alert('Thanks! All your feedback has been successfully submitted.');
     } else {
-      const errorDetails = await resp.text();
-      console.error('Server Error:', errorDetails);
-      alert(`Submission failed: ${errorDetails}`);
+      alert(`Thanks! Your feedback up to now has been submitted.\nPlease come back later to finish the remaining videos, starting from Page ${currentPage + 1}.`);
     }
+  } else {
+    const errorDetails = await resp.text();
+    console.error('Server error:', errorDetails);
+    alert(`Submission failed, please try again.`);
+  }
   } catch (err) {
     console.error('Network error:', err);
     alert('Network error, please try again.');
