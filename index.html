@@ -306,24 +306,26 @@ async function submitFeedback() {
 
   // Collect answers and confidence
   const responses = {};
-  const confidenceData = {};  // To store confidence separately if needed
   let answeredCount = 0;
 
+  // Iterate over all videos and collect answers and confidence
   videos.forEach((v, idx) => {
     const ans = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
-    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || "Not Provided"; // Default to "Not Provided" if not filled
+    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null; // If no confidence provided, use null
 
-    console.log(`Video ${idx}: Answer: ${ans}, Confidence: ${conf}`);  // Log to check
+    // If the answer is not provided, set answer and confidence to null
+    responses[v.id] = {
+      answer: ans || null,       // Set answer to null if not provided
+      confidence: conf || null   // Set confidence to null if not provided
+    };
 
-    if (ans) {
-      responses[v.id] = {
-        answer: ans,
-        confidence: conf // Confidence is either provided or defaulted to "Not Provided"
-      };
+    // Count answered questions (this is optional for tracking progress)
+    if (ans !== null) {
       answeredCount++;
     }
   });
 
+  // Ensure that at least one question is answered before submitting
   if (answeredCount === 0) {
     alert('Please answer at least one video before submitting.');
     return;
@@ -336,13 +338,13 @@ async function submitFeedback() {
     return;
   }
 
-  // Prepare and send the payload
+  // Prepare the payload
   const payload = {
     name, affiliation, position, expertise, comments, rationale,
-    responses: JSON.stringify(responses), // Ensure responses is properly serialized
+    responses: JSON.stringify(responses), // Serialize the responses to send to the server
   };
 
-  // Log the payload to verify structure
+  // Log the payload to verify its structure
   console.log('Payload being sent:', JSON.stringify(payload));
 
   // Send the payload to the server
