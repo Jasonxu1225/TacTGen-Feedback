@@ -17,15 +17,41 @@
       align-items: center;
       gap: 20px;
     }
+
     .comparison-row { display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; }
     .video-item     { display:flex; justify-content:center; width:60%; }
     .video-item video { width:100%; border:2px solid #ccc; border-radius:6px; }
 
     .feedback-inline { display:flex; flex-direction:column; align-items:center; gap:10px; width:1000px; margin-bottom:5px; }
     .feedback-inline .feedback-prompt { font-size:1.5em; font-weight:500; text-align:center; }
-    .feedback-inline .choices { display:flex; gap:20px; justify-content:center; }
+    .feedback-inline .choices {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;  /* Align all items in the row */
+    }
     .feedback-inline .choice  { font-size:1.2em; display:flex; align-items:center; }
     .feedback-inline .choice input { transform:scale(1.3); margin-right:6px; }
+
+    /* Confidence input aligned with choices */
+    .confidence-box {
+      font-size: 1.1em;
+      display: inline-flex;   /* Make it inline to stay on the same line as radio buttons */
+      align-items: center;    /* Vertically center the input with text */
+      gap: 6px;               /* Space between label and input */
+    }
+
+    .confidence-box input {
+      width: 50px;
+      margin-left: 6px;
+    }
+
+    .event-name {
+      font-size: 1.6em;
+      margin-top: 6px;
+      margin-bottom: -6px;
+      font-weight: 500;
+    }
 
     .nav-buttons { display:flex; gap:10px; margin-top:-5px; }
     .nav-buttons button { padding:6px 15px; font-size:1.1em; background:#4caf50; color:#fff; border:none; border-radius:6px; cursor:pointer; transition:background .3s; }
@@ -78,11 +104,16 @@
         <li>The attacking team always moves <strong>left&nbsp;→&nbsp;right</strong>.</li>
         <li><strong>Sampling rate:</strong> player tracking is captured at 10 Hz, and videos are rendered at 5 fps, so <em>1 s of video equals 0.5 s of real-world play</em>.</li>
         <li>The <strong>ball trajectory is always real</strong>; only the post-event segment of <em>22 players</em> may be synthetic.</li>
+        <li>There are <strong>50 generated and 50 realistic clips</strong> shown in a random order (fixed seed). The post event movements are <strong>always</strong> completely real or completely generated, without mixing them.</li>
+        <li>We provide five realistic clips to get you familiar with the animations here: <a href="https://drive.google.com/drive/folders/1gh5ASZhNjMZCnbaJyELWEDJHBkwrJZKJ?usp=sharing" target="_blank">Google Drive Folder</a>.</li>
       </ul>
 
       <h3 style="margin-bottom:0.3em;">Your task</h3>
       <p>For each video, decide whether the <strong>post-event player movements</strong> look <em>realistic</em> (authentic) or <em>generated</em> (AI-predicted). Keep in mind that the <strong>ball trajectory is always realistic</strong>.</p>
-      <br><em>PS: You can submit your responses after completing at least one video, and turn back next time to continue. For instance, if you finish and submit feedback for the first 10 videos, you can later return directly to page 11 and continue from there.</em>
+      <h3 style="margin-bottom:0.3em;">PS</h3>
+      <li>You may submit your responses after completing at least one video. Clicking the Submit button will record all of your already selected answers to the server at once. For convenience, you might choose to submit your responses every 5 or 10 events.</li>
+      <li>If you'd like to take a break and continue later, you're also welcome to temporarily submit your progress. For example, if you complete and submit feedback for the first 10 videos, you can return later and resume directly from page 11.</li>
+      <li>When clicking the submit button, it will require you to provide some simple feedback during your annotation progress.</li>
     </div>
   </div>
 
@@ -104,19 +135,14 @@
   <!-- ---------- SUBMIT ---------- -->
   <button id="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
 
-  <!-- ---------- RATIONALE & CONFIDENCE DIALOG ---------- -->
+  <!-- ---------- RATIONALE DIALOG ---------- -->
   <div id="rationaleDialog" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#0008;z-index:1000;">
     <div style="background:#fff;padding:24px 22px;width:90%;max-width:480px;border-radius:8px;box-shadow:0 4px 18px #0004;">
       <h3 style="margin-top:0;">How did you make your decision?</h3>
       <p style="font-size:0.95em;margin-bottom:8px;">
-        Please briefly describe <strong>how</strong> you distinguished between
-        <em>generated</em> and <em>realistic</em> player movements, and tell us
-        whether you found the task <strong>easy or challenging</strong>.
+      Please summarize the main cues you relied on to <strong>distinguish</strong> <em>generated</em> from <em>realistic</em> player movements in the clips you’ve watched so far, and tell us whether you found the task <strong>easy or challenging</strong>.
       </p>
       <textarea id="rationaleText" rows="6" style="width:100%;"></textarea>
-
-      <h4 style="margin:16px 0 6px;">Confidence (0–100)</h4>
-      <input id="confidenceInput" type="number" min="0" max="100" style="width:100%;">
 
       <div style="margin-top:18px;text-align:right;">
         <button onclick="closeDialog(false)" style="margin-right:8px;">Cancel</button>
@@ -162,10 +188,15 @@ const genDirs = [
   "Save_986530_2001841_41","Save_986564_1341368_41","Take On_1059794_42061_41","Take On_986544_1763801_36"
 ];
 
-/* ---------------- 2. BUILD VIDEO OBJECTS ------------- */
+// Function to extract event name from file name
+function extractEventName(fileName) {
+  return fileName.split('_')[0]; // Take the part before the first underscore
+}
+
+// Create video objects and inject them into the HTML
 const videos = [];
-gtDirs.forEach(dir => videos.push({src:`videos/gt/${dir}/GroundTruth.mp4`,    id:`gt_${dir}`}));
-genDirs.forEach(dir=> videos.push({src:`videos/generated/${dir}/generated.mp4`,id:`gen_${dir}`}));
+gtDirs.forEach(dir => videos.push({src: `videos/gt/${dir}/GroundTruth.mp4`, id: `gt_${dir}`, eventName: extractEventName(dir)}));
+genDirs.forEach(dir => videos.push({src: `videos/generated/${dir}/generated.mp4`, id: `gen_${dir}`, eventName: extractEventName(dir)}));
 
 /* ------------- 3. SEEDED SHUFFLE --------------------- */
 /* deterministic PRNG (mulberry32) */
@@ -198,11 +229,22 @@ videos.forEach((v, idx) => {
     <div class="comparison-row">
       <div class="feedback-inline">
         <div class="feedback-prompt">
-          Is the post-event player movements generated or realistic?<span class="asterisk"> *</span>
+          Are the post-event player movements generated or realistic?<span class="asterisk"> *</span>
         </div>
         <div class="choices">
           <label class="choice"><input type="radio" name="q${idx}" value="Generated">Generated</label>
           <label class="choice"><input type="radio" name="q${idx}" value="Realistic">Realistic</label>
+
+          <!-- Confidence input placed inline with radio options -->
+          <span class="confidence-box">
+            Confidence (0–100):
+            <input type="number" name="conf${idx}" min="0" max="100">
+          </span>
+        </div>
+
+        <!-- Event name display -->
+        <div class="event-name">
+          Event: ${v.eventName}
         </div>
       </div>
       <div class="video-item">
@@ -262,13 +304,14 @@ async function submitFeedback(){
     return;
   }
 
-  /* 1️⃣  collect whatever answers exist */
-  const answers = {};
+  /* 1️⃣ collect answers + confidence */
+  const responses = {};
   let answeredCount = 0;
   videos.forEach((v, idx) => {
-    const val = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
-    if(val) answeredCount++;
-    answers[v.id] = val;
+    const ans  = document.querySelector(`input[name="q${idx}"]:checked`)?.value || null;
+    const conf = document.querySelector(`input[name="conf${idx}"]`)?.value.trim() || null;
+    if(ans) answeredCount++;
+    responses[v.id] = { answer: ans, confidence: conf };
   });
 
   if(answeredCount === 0){
@@ -276,17 +319,14 @@ async function submitFeedback(){
     return;
   }
 
-  /* 2️⃣  get rationale + confidence from custom dialog */
-  const extra = await askRationaleAndConfidence();
-  if(extra === null) return;                 // user cancelled dialog
-  const {rationale, confidence} = extra;
+  /* 2️⃣ rationale dialog (confidence removed) */
+  const rationale = await askRationale();
+  if(rationale === null) return;          // user cancelled dialog
 
-  /* 3️⃣  package & send */
-  const payload = {
-    name, affiliation, position, expertise, comments,
-    rationale, confidence,
-    responses: JSON.stringify(answers)
-  };
+  /* 3️⃣ package & send */
+  const payload = { name, affiliation, position, expertise, comments,
+                    rationale,
+                    responses: JSON.stringify(responses) };
 
   try{
     const resp = await fetch('https://tactgen-proxy.nwpujasonxu.workers.dev',{
@@ -311,25 +351,20 @@ async function submitFeedback(){
   }
 }
 
-/* ---------- Modal helpers (new) ---------- */
+/* ---------- Modal helpers (confidence removed) ---------- */
 function openDialog(){ document.getElementById('rationaleDialog').style.display='flex'; }
 function closeDialog(ok){
   if(!ok){
     document.getElementById('rationaleDialog').style.display='none';
-    pendingResolve(null);                    // cancel
+    pendingResolve(null);                 // cancel
     return;
   }
-  const rationale  = document.getElementById('rationaleText').value.trim();
-  const confidence = document.getElementById('confidenceInput').value.trim();
-  if(confidence && !/^\d{1,3}$/.test(confidence)){
-    alert('Confidence must be a number between 0 and 100.');
-    return;
-  }
+  const rationale = document.getElementById('rationaleText').value.trim();
   document.getElementById('rationaleDialog').style.display='none';
-  pendingResolve({rationale, confidence});
+  pendingResolve(rationale);
 }
 let pendingResolve;
-function askRationaleAndConfidence(){
+function askRationale(){
   return new Promise(res=>{
     pendingResolve = res;
     openDialog();

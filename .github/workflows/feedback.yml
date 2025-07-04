@@ -9,8 +9,8 @@ on:
       expertise:   {description: Experience / expertise in football,      required: true,  type: string}
       comments:    {description: Other comments (optional),               required: false, type: string}
       rationale:   {description: How the participant distinguished clips, required: true,  type: string}
-      confidence:  {description: Confidence (0-100 %),                    required: true,  type: string}
       responses:   {description: 'JSON map videoID→answer',               required: true,  type: string}
+      confidence:  {description: 'JSON map videoID→confidence',           required: true,  type: string}  # Updated for multiple videos
 
 jobs:
   email:
@@ -30,10 +30,10 @@ jobs:
             printf 'Expertise: %s\n'    "${{ inputs.expertise }}"
             printf 'Comments: %s\n'     "${{ inputs.comments }}"
             printf 'Rationale: %s\n'    "${{ inputs.rationale }}"
-            printf 'Confidence: %s%%\n\n' "${{ inputs.confidence }}"
 
+            # Format responses and confidence
             echo '${{ inputs.responses }}' \
-              | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value)"'
+              | jq -r 'to_entries[] | "• \(.key) ⇒ \(.value.answer) - Confidence: \(.value.confidence)%"'  # Updated to show answer and confidence
 
             printf '\n(Workflow run → https://github.com/%s/actions/runs/%s)\n' \
                    "${{ github.repository }}" "${{ github.run_id }}"
